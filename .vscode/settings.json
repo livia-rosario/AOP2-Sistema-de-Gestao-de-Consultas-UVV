@@ -1,0 +1,12 @@
+{
+  "mssql.connections": [
+    {
+      "profileName": "Consultas UVV - LocalDB",
+      "server": "(localdb)\\MSSQLLocalDB",
+      "database": "GestaoConsultasUVV",
+      "authenticationType": "Integrated",
+      "encrypt": "Mandatory",
+      "trustServerCertificate": true
+    }
+  ]
+}
