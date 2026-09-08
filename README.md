@@ -232,7 +232,11 @@ Após uma gravação bem-sucedida, a ação redireciona para a listagem. `TempDa
 
 As páginas usam **Bootstrap 5**, carregado localmente em `wwwroot/lib/bootstrap/dist/css/bootstrap.min.css` — **sem dependência de CDN**.
 
+A paleta é definida em variáveis CSS no `site.css`: petróleo profundo (`#0D5C56`) na navegação e nos cabeçalhos, menta (`#14B8A6`) nos botões principais e ícones, cinza suave (`#F4F7F6`) no fundo e grafite (`#192A27`) nos textos. Os botões menta usam texto grafite para manter a legibilidade. Mensagens de erro e ações de exclusão mantêm o vermelho.
+
 O layout compartilhado `Views/Shared/_Layout.cshtml` define cabeçalho, navegação, área de mensagens e rodapé; `RenderBody()` insere o conteúdo de cada tela.
+
+O logo é uma cruz em SVG, em `wwwroot/images/logo.svg`, reutilizada na navegação, na página inicial e no ícone da aba. A página inicial usa um cartão centralizado e responsivo com os links de acesso.
 
 | Classe Bootstrap | Uso |
 |---|---|
@@ -245,7 +249,7 @@ O layout compartilhado `Views/Shared/_Layout.cshtml` define cabeçalho, navegaç
 | `alert alert-success` | Mensagens após cadastro, edição e exclusão |
 | `d-flex`, `flex-wrap`, `gap-2` | Organização de botões e navegação |
 
-`wwwroot/css/site.css` contém apenas ajustes pontuais: fonte (Segoe UI, com fallback do sistema), largura dos formulários, quebra de texto, foco e bordas de validação. O JavaScript do Bootstrap **não é carregado**, pois nenhuma tela usa componentes que dependem dele.
+`wwwroot/css/site.css` contém ajustes de fonte (Segoe UI, com fallback do sistema), largura dos formulários, quebra de texto, foco e bordas de validação. A tela de login usa um cartão compacto com destaque verde, ícone de calendário, campos maiores e botão de largura inteira; esses estilos ficam restritos à classe `login-card`. O JavaScript do Bootstrap **não é carregado**, pois nenhuma tela usa componentes que dependem dele.
 
 A View parcial `Views/Consultas/_Formulario.cshtml` é compartilhada entre as telas de criação e edição, mantendo os mesmos campos e regras visuais.
 

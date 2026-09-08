@@ -1,14 +1,31 @@
 @model LoginViewModel
 @{ ViewData["Title"] = "Entrar"; }
-<section class="card p-4 form-container mx-auto">
-    <h1 class="h3 mb-4">Entrar</h1>
+<section class="login-card card mx-auto" aria-labelledby="login-titulo">
+    <div class="login-icon mb-4" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="5" width="18" height="16" rx="3" />
+            <path d="M16 3v4M8 3v4M3 11h18M9 16h6M12 13v6" />
+        </svg>
+    </div>
+    <h1 id="login-titulo" class="h3 fw-semibold mb-2">Entrar na sua conta</h1>
+    <p class="text-secondary mb-4">Informe seu e-mail e senha.</p>
     <form asp-action="Login" method="post">
         <input asp-for="ReturnUrl" type="hidden" />
         <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-        <div class="mb-3"><label class="form-label" asp-for="Email"></label><input class="form-control" asp-for="Email" autocomplete="username" /><span class="text-danger small" asp-validation-for="Email"></span></div>
-        <div class="mb-3"><label class="form-label" asp-for="Senha"></label><input class="form-control" asp-for="Senha" autocomplete="current-password" /><span class="text-danger small" asp-validation-for="Senha"></span></div>
-        <button class="btn btn-success" type="submit">Entrar</button>
-        <a class="btn btn-link text-success" asp-action="Cadastro">Cadastrar usuário</a>
+        <div class="mb-3">
+            <label class="form-label fw-semibold" asp-for="Email"></label>
+            <input class="form-control" asp-for="Email" autocomplete="username" placeholder="seu@email.com" aria-describedby="email-erro" />
+            <span id="email-erro" class="text-danger small" asp-validation-for="Email"></span>
+        </div>
+        <div class="mb-4">
+            <label class="form-label fw-semibold" asp-for="Senha"></label>
+            <input class="form-control" asp-for="Senha" autocomplete="current-password" placeholder="Digite sua senha" aria-describedby="senha-erro" />
+            <span id="senha-erro" class="text-danger small" asp-validation-for="Senha"></span>
+        </div>
+        <button class="btn btn-success w-100 fw-semibold" type="submit">Entrar</button>
     </form>
+    <p class="login-cadastro text-secondary text-center mb-0">
+        Ainda não tem conta? <a class="text-success fw-semibold" asp-action="Cadastro">Cadastre-se</a>
+    </p>
 </section>
 @section Scripts { <partial name="_ValidationScriptsPartial" /> }
