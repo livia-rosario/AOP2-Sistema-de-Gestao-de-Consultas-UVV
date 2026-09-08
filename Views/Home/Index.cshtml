@@ -1,0 +1,16 @@
+@{ ViewData["Title"] = "Início"; }
+<section class="card p-4">
+    <h1 class="h3">Sistema de Gestão de Consultas UVV</h1>
+    <p class="text-secondary">Cadastre, visualize, edite e exclua suas consultas.</p>
+    <div class="d-flex flex-wrap gap-2">
+    @if (User.Identity?.IsAuthenticated == true)
+    {
+        <a class="btn btn-success" asp-controller="Consultas" asp-action="Index">Minhas consultas</a>
+    }
+    else
+    {
+        <a class="btn btn-success" asp-controller="Conta" asp-action="Login">Entrar</a>
+        <a class="btn btn-outline-success" asp-controller="Conta" asp-action="Cadastro">Cadastrar usuário</a>
+    }
+    </div>
+</section>

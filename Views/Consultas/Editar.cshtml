@@ -1,0 +1,7 @@
+@model ConsultaViewModel
+@{ ViewData["Title"] = "Editar consulta"; }
+<section class="card p-4 form-container mx-auto">
+<h1 class="h3 mb-4">Editar consulta</h1>
+<form asp-action="Editar" asp-route-id="@Context.Request.RouteValues["id"]" method="post"><partial name="_Formulario" model="Model" /></form>
+</section>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

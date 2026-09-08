@@ -1,0 +1,14 @@
+@model LoginViewModel
+@{ ViewData["Title"] = "Entrar"; }
+<section class="card p-4 form-container mx-auto">
+    <h1 class="h3 mb-4">Entrar</h1>
+    <form asp-action="Login" method="post">
+        <input asp-for="ReturnUrl" type="hidden" />
+        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+        <div class="mb-3"><label class="form-label" asp-for="Email"></label><input class="form-control" asp-for="Email" autocomplete="username" /><span class="text-danger small" asp-validation-for="Email"></span></div>
+        <div class="mb-3"><label class="form-label" asp-for="Senha"></label><input class="form-control" asp-for="Senha" autocomplete="current-password" /><span class="text-danger small" asp-validation-for="Senha"></span></div>
+        <button class="btn btn-success" type="submit">Entrar</button>
+        <a class="btn btn-link text-success" asp-action="Cadastro">Cadastrar usuário</a>
+    </form>
+</section>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

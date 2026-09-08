@@ -1,0 +1,7 @@
+@model ConsultaViewModel
+<div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+<div class="mb-3"><label class="form-label" asp-for="Especialidade"></label><input class="form-control" asp-for="Especialidade" list="especialidades" placeholder="Ex.: Cardiologia" /><span class="text-danger small" asp-validation-for="Especialidade"></span></div>
+<datalist id="especialidades"><option value="Clínica geral"></option><option value="Cardiologia"></option><option value="Dermatologia"></option><option value="Odontologia"></option><option value="Psicologia"></option><option value="Nutrição"></option><option value="Oftalmologia"></option></datalist>
+<div class="mb-3"><label class="form-label" asp-for="DataHora"></label><input class="form-control" asp-for="DataHora" type="datetime-local" asp-format="{0:yyyy-MM-ddTHH:mm}" aria-describedby="hora-ajuda" /><div id="hora-ajuda" class="form-text">Horário local da consulta.</div><span class="text-danger small" asp-validation-for="DataHora"></span></div>
+<div class="mb-3"><label class="form-label" asp-for="Descricao"></label><textarea class="form-control" asp-for="Descricao" rows="4"></textarea><span class="text-danger small" asp-validation-for="Descricao"></span></div>
+<div class="d-flex gap-2"><button class="btn btn-success" type="submit">Salvar</button><a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a></div>

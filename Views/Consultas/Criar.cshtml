@@ -1,0 +1,7 @@
+@model ConsultaViewModel
+@{ ViewData["Title"] = "Cadastrar consulta"; }
+<section class="card p-4 form-container mx-auto">
+<h1 class="h3 mb-4">Cadastrar consulta</h1>
+<form asp-action="Criar" method="post"><partial name="_Formulario" model="Model" /></form>
+</section>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

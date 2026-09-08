@@ -1,0 +1,7 @@
+body { font-family: "Segoe UI Variable", "Segoe UI", system-ui, sans-serif; }
+main { min-height: calc(100vh - 145px); }
+.form-container { max-width: 600px; }
+.description { white-space: pre-wrap; overflow-wrap: anywhere; max-width: 460px; }
+.input-validation-error { border-color: #dc3545; }
+a:focus-visible, button:focus-visible { outline: 3px solid #198754; outline-offset: 3px; }
+header a:focus-visible, header button:focus-visible { outline-color: white; }

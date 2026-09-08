@@ -1,0 +1,681 @@
+{
+  "info": {
+    "name": "Consultas UVV - Cadastro, login e CRUD",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Aplicação ASP.NET Core MVC: retorna HTML e redirecionamentos, não JSON. Execute em ordem ou use Run collection. Mantenha cookies ativados e redirects desativados. O primeiro passo gera um e-mail fictício diferente por execução. A consulta de teste é excluída ao final; a conta de teste fica cadastrada. Para recomeçar após uma interrupção, apague os cookies de localhost. Não é necessário Bearer Token."
+  },
+  "protocolProfileBehavior": {
+    "followRedirects": false
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5195",
+      "type": "string"
+    },
+    {
+      "key": "email",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "senha",
+      "value": "TestePostman!2026",
+      "type": "string"
+    },
+    {
+      "key": "antiforgery",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "consultaId",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "01 - Abrir cadastro e obter token",
+      "protocolProfileBehavior": {
+        "followRedirects": false
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/Conta/Cadastro"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.collectionVariables.set(\"email\", \"postman.\" + Date.now() + \"@example.invalid\");",
+              "pm.collectionVariables.unset(\"consultaId\");",
+              "pm.collectionVariables.unset(\"antiforgery\");"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status HTTP 200\", function () { pm.response.to.have.status(200); });",
+              "const match = pm.response.text().match(/name=\"__RequestVerificationToken\"[^>]*value=\"([^\"]+)\"/);",
+              "pm.test(\"Token antiforgery presente\", function () { pm.expect(match).not.to.equal(null); });",
+              "if (match) pm.collectionVariables.set(\"antiforgery\", match[1]);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 - Cadastrar usuário (POST)",
+      "protocolProfileBehavior": {
+        "followRedirects": false
+      },
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{baseUrl}}/Conta/Cadastro",
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "__RequestVerificationToken",
+              "value": "{{antiforgery}}",
+              "type": "text"
+            },
+            {
+              "key": "Nome",
+              "value": "Usuário Postman",
+              "type": "text"
+            },
+            {
+              "key": "Email",
+              "value": "{{email}}",
+              "type": "text"
+            },
+            {
+              "key": "Senha",
+              "value": "{{senha}}",
+              "type": "text"
+            },
+            {
+              "key": "ConfirmarSenha",
+              "value": "{{senha}}",
+              "type": "text"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status HTTP 302\", function () { pm.response.to.have.status(302); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 - Abrir login e obter token",
+      "protocolProfileBehavior": {
+        "followRedirects": false
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/Conta/Login"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status HTTP 200\", function () { pm.response.to.have.status(200); });",
+              "const match = pm.response.text().match(/name=\"__RequestVerificationToken\"[^>]*value=\"([^\"]+)\"/);",
+              "pm.test(\"Token antiforgery presente\", function () { pm.expect(match).not.to.equal(null); });",
+              "if (match) pm.collectionVariables.set(\"antiforgery\", match[1]);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 - Rejeitar senha incorreta",
+      "protocolProfileBehavior": {
+        "followRedirects": false
+      },
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{baseUrl}}/Conta/Login",
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "__RequestVerificationToken",
+              "value": "{{antiforgery}}",
+              "type": "text"
+            },
+            {
+              "key": "Email",
+              "value": "{{email}}",
+              "type": "text"
+            },
+            {
+              "key": "Senha",
+              "value": "SenhaErrada!123",
+              "type": "text"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status HTTP 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"Exibe erro de login\", function () { pm.expect(pm.response.text()).to.include(\"incorretos\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 - Entrar (POST)",
+      "protocolProfileBehavior": {
+        "followRedirects": false
+      },
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{baseUrl}}/Conta/Login",
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "__RequestVerificationToken",
+              "value": "{{antiforgery}}",
+              "type": "text"
+            },
+            {
+              "key": "Email",
+              "value": "{{email}}",
+              "type": "text"
+            },
+            {
+              "key": "Senha",
+              "value": "{{senha}}",
+              "type": "text"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status HTTP 302\", function () { pm.response.to.have.status(302); });",
+              "pm.test(\"Redireciona para consultas\", function () { pm.expect(pm.response.headers.get(\"Location\")).to.equal(\"/Consultas\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 - Listar consultas autenticado",
+      "protocolProfileBehavior": {
+        "followRedirects": false
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/Consultas"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status HTTP 200\", function () { pm.response.to.have.status(200); });",
+              "const match = pm.response.text().match(/name=\"__RequestVerificationToken\"[^>]*value=\"([^\"]+)\"/);",
+              "pm.test(\"Token antiforgery presente\", function () { pm.expect(match).not.to.equal(null); });",
+              "if (match) pm.collectionVariables.set(\"antiforgery\", match[1]);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 - Abrir formulário de consulta e obter token",
+      "protocolProfileBehavior": {
+        "followRedirects": false
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/Consultas/Criar"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status HTTP 200\", function () { pm.response.to.have.status(200); });",
+              "const match = pm.response.text().match(/name=\"__RequestVerificationToken\"[^>]*value=\"([^\"]+)\"/);",
+              "pm.test(\"Token antiforgery presente\", function () { pm.expect(match).not.to.equal(null); });",
+              "if (match) pm.collectionVariables.set(\"antiforgery\", match[1]);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "08 - Rejeitar consulta sem campos obrigatórios",
+      "protocolProfileBehavior": {
+        "followRedirects": false
+      },
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{baseUrl}}/Consultas/Criar",
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "__RequestVerificationToken",
+              "value": "{{antiforgery}}",
+              "type": "text"
+            },
+            {
+              "key": "Especialidade",
+              "value": "",
+              "type": "text"
+            },
+            {
+              "key": "DataHora",
+              "value": "",
+              "type": "text"
+            },
+            {
+              "key": "Descricao",
+              "value": "",
+              "type": "text"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status HTTP 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"Erros de validação\", function () { pm.expect(pm.response.text()).to.include(\"field-validation-error\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "09 - Cadastrar consulta (POST)",
+      "protocolProfileBehavior": {
+        "followRedirects": false
+      },
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{baseUrl}}/Consultas/Criar",
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "__RequestVerificationToken",
+              "value": "{{antiforgery}}",
+              "type": "text"
+            },
+            {
+              "key": "Especialidade",
+              "value": "Cardiologia",
+              "type": "text"
+            },
+            {
+              "key": "DataHora",
+              "value": "2026-10-20T14:30",
+              "type": "text"
+            },
+            {
+              "key": "Descricao",
+              "value": "Consulta de teste do Postman",
+              "type": "text"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status HTTP 302\", function () { pm.response.to.have.status(302); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "10 - Listar e capturar ID da consulta",
+      "protocolProfileBehavior": {
+        "followRedirects": false
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/Consultas"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status HTTP 200\", function () { pm.response.to.have.status(200); });",
+              "const match = pm.response.text().match(/name=\"__RequestVerificationToken\"[^>]*value=\"([^\"]+)\"/);",
+              "pm.test(\"Token antiforgery presente\", function () { pm.expect(match).not.to.equal(null); });",
+              "if (match) pm.collectionVariables.set(\"antiforgery\", match[1]);",
+              "const matchId = pm.response.text().match(/href=\"\\/Consultas\\/Editar\\/(\\d+)\"/);",
+              "pm.test(\"Consulta salva e identificada\", function () { pm.expect(matchId).not.to.equal(null); pm.expect(pm.response.text()).to.include(\"Cardiologia\"); });",
+              "if (matchId) pm.collectionVariables.set(\"consultaId\", matchId[1]);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "11 - Abrir edição e obter token",
+      "protocolProfileBehavior": {
+        "followRedirects": false
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/Consultas/Editar/{{consultaId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status HTTP 200\", function () { pm.response.to.have.status(200); });",
+              "const match = pm.response.text().match(/name=\"__RequestVerificationToken\"[^>]*value=\"([^\"]+)\"/);",
+              "pm.test(\"Token antiforgery presente\", function () { pm.expect(match).not.to.equal(null); });",
+              "if (match) pm.collectionVariables.set(\"antiforgery\", match[1]);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "12 - Editar consulta (POST)",
+      "protocolProfileBehavior": {
+        "followRedirects": false
+      },
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{baseUrl}}/Consultas/Editar/{{consultaId}}",
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "__RequestVerificationToken",
+              "value": "{{antiforgery}}",
+              "type": "text"
+            },
+            {
+              "key": "Especialidade",
+              "value": "Dermatologia",
+              "type": "text"
+            },
+            {
+              "key": "DataHora",
+              "value": "2026-10-21T09:45",
+              "type": "text"
+            },
+            {
+              "key": "Descricao",
+              "value": "Consulta alterada pelo Postman",
+              "type": "text"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status HTTP 302\", function () { pm.response.to.have.status(302); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "13 - Conferir alteração na listagem",
+      "protocolProfileBehavior": {
+        "followRedirects": false
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/Consultas"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status HTTP 200\", function () { pm.response.to.have.status(200); });",
+              "pm.test(\"Alteração persistida\", function () { pm.expect(pm.response.text()).to.include(\"Dermatologia\"); pm.expect(pm.response.text()).to.include(\"21/10/2026 09:45\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "14 - Abrir confirmação de exclusão (não exclui)",
+      "protocolProfileBehavior": {
+        "followRedirects": false
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/Consultas/Excluir/{{consultaId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status HTTP 200\", function () { pm.response.to.have.status(200); });",
+              "const match = pm.response.text().match(/name=\"__RequestVerificationToken\"[^>]*value=\"([^\"]+)\"/);",
+              "pm.test(\"Token antiforgery presente\", function () { pm.expect(match).not.to.equal(null); });",
+              "if (match) pm.collectionVariables.set(\"antiforgery\", match[1]);"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "15 - Excluir consulta (POST)",
+      "protocolProfileBehavior": {
+        "followRedirects": false
+      },
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{baseUrl}}/Consultas/Excluir/{{consultaId}}",
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "__RequestVerificationToken",
+              "value": "{{antiforgery}}",
+              "type": "text"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status HTTP 302\", function () { pm.response.to.have.status(302); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "16 - Conferir exclusão e obter token para sair",
+      "protocolProfileBehavior": {
+        "followRedirects": false
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/Consultas"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status HTTP 200\", function () { pm.response.to.have.status(200); });",
+              "const match = pm.response.text().match(/name=\"__RequestVerificationToken\"[^>]*value=\"([^\"]+)\"/);",
+              "pm.test(\"Token antiforgery presente\", function () { pm.expect(match).not.to.equal(null); });",
+              "if (match) pm.collectionVariables.set(\"antiforgery\", match[1]);",
+              "pm.test(\"Consulta removida\", function () { pm.expect(pm.response.text()).not.to.include(\"/Consultas/Editar/\" + pm.collectionVariables.get(\"consultaId\")); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "17 - Sair (POST)",
+      "protocolProfileBehavior": {
+        "followRedirects": false
+      },
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{baseUrl}}/Conta/Sair",
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "__RequestVerificationToken",
+              "value": "{{antiforgery}}",
+              "type": "text"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status HTTP 302\", function () { pm.response.to.have.status(302); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "18 - Verificar proteção sem login",
+      "protocolProfileBehavior": {
+        "followRedirects": false
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{baseUrl}}/Consultas"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status HTTP 302\", function () { pm.response.to.have.status(302); });",
+              "pm.test(\"Solicita login\", function () { pm.expect(pm.response.headers.get(\"Location\")).to.include(\"/Conta/Login\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "19 - Rejeitar POST sem antiforgery",
+      "protocolProfileBehavior": {
+        "followRedirects": false
+      },
+      "request": {
+        "method": "POST",
+        "header": [],
+        "url": "{{baseUrl}}/Conta/Login",
+        "body": {
+          "mode": "urlencoded",
+          "urlencoded": [
+            {
+              "key": "Email",
+              "value": "{{email}}",
+              "type": "text"
+            },
+            {
+              "key": "Senha",
+              "value": "{{senha}}",
+              "type": "text"
+            }
+          ]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Status HTTP 400\", function () { pm.response.to.have.status(400); });"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+@model ErrorViewModel
+@{ ViewData["Title"] = "Erro"; }
+<section class="alert alert-danger">
+<h1 class="h4">Não foi possível concluir a solicitação.</h1>
+<p>Tente novamente. Se o problema continuar, verifique a conexão com o banco de dados.</p>
+@if (Model.ShowRequestId) { <p>Referência: <code>@Model.RequestId</code></p> }
+<a class="btn btn-outline-danger" asp-controller="Home" asp-action="Index">Voltar ao início</a>
+</section>

@@ -1,0 +1,15 @@
+@model CadastroViewModel
+@{ ViewData["Title"] = "Cadastrar usuário"; }
+<section class="card p-4 form-container mx-auto">
+    <h1 class="h3 mb-4">Cadastrar usuário</h1>
+    <form asp-action="Cadastro" method="post">
+        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+        <div class="mb-3"><label class="form-label" asp-for="Nome"></label><input class="form-control" asp-for="Nome" autocomplete="name" /><span class="text-danger small" asp-validation-for="Nome"></span></div>
+        <div class="mb-3"><label class="form-label" asp-for="Email"></label><input class="form-control" asp-for="Email" autocomplete="email" /><span class="text-danger small" asp-validation-for="Email"></span></div>
+        <div class="mb-3"><label class="form-label" asp-for="Senha"></label><input class="form-control" asp-for="Senha" autocomplete="new-password" aria-describedby="senha-ajuda" /><div id="senha-ajuda" class="form-text">Use entre 8 e 128 caracteres.</div><span class="text-danger small" asp-validation-for="Senha"></span></div>
+        <div class="mb-3"><label class="form-label" asp-for="ConfirmarSenha"></label><input class="form-control" asp-for="ConfirmarSenha" autocomplete="new-password" /><span class="text-danger small" asp-validation-for="ConfirmarSenha"></span></div>
+        <button class="btn btn-success" type="submit">Cadastrar</button>
+        <a class="btn btn-link text-success" asp-action="Login">Já tenho uma conta</a>
+    </form>
+</section>
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
