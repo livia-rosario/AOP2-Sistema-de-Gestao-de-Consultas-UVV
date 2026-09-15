@@ -315,4 +315,4 @@ O sistema mantém **registros pessoais de consultas**. Ele **não**:
 
 ## 🎥 Vídeo demonstrativo
 
-📎 Link do vídeo: *a adicionar*
+📎 Link do vídeo: https://youtu.be/CXq03NCUo0A
