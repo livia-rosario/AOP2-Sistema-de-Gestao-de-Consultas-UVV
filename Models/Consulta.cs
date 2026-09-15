@@ -15,7 +15,7 @@ public class Consulta
     [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy HH:mm}")]
     public DateTime DataHora { get; set; }
 
-    [Required(ErrorMessage = "Informe a descrição.")]
+    [Required(AllowEmptyStrings = true)]
     [StringLength(1000, ErrorMessage = "A descrição deve ter no máximo 1000 caracteres.")]
     [Display(Name = "Descrição")]
     [DataType(DataType.MultilineText)]

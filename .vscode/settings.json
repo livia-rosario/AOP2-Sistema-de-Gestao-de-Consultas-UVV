@@ -6,7 +6,9 @@
       "database": "GestaoConsultasUVV",
       "authenticationType": "Integrated",
       "encrypt": "Mandatory",
-      "trustServerCertificate": true
+      "trustServerCertificate": true,
+      "groupId": "ROOT",
+      "id": "51dd588e-0418-4639-9b99-88083f6af0a5"
     }
   ]
 }

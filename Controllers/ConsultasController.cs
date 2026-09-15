@@ -36,7 +36,7 @@ public class ConsultasController : Controller
         {
             Especialidade = model.Especialidade.Trim(),
             DataHora = model.DataHora!.Value,
-            Descricao = model.Descricao.Trim(),
+            Descricao = model.Descricao?.Trim() ?? string.Empty,
             // A conta vem da sessão autenticada, nunca de um campo enviado pelo navegador.
             UsuarioId = UsuarioId
         });
@@ -65,7 +65,7 @@ public class ConsultasController : Controller
         if (!ModelState.IsValid) return View(model);
         consulta.Especialidade = model.Especialidade.Trim();
         consulta.DataHora = model.DataHora!.Value;
-        consulta.Descricao = model.Descricao.Trim();
+        consulta.Descricao = model.Descricao?.Trim() ?? string.Empty;
         try { await db.SaveChangesAsync(); }
         catch (DbUpdateConcurrencyException) { return NotFound(); }
         TempData["Sucesso"] = "Consulta atualizada.";

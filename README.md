@@ -217,6 +217,8 @@ Após uma gravação bem-sucedida, a ação redireciona para a listagem. `TempDa
 
 ## ✔️ Validação e segurança
 
+A descrição da consulta é opcional, tanto no cadastro quanto na edição, com limite de 1.000 caracteres. Quando não preenchida, é armazenada como texto vazio; especialidade e data/horário continuam obrigatórios.
+
 - **Data Annotations** (`Required`, `StringLength`, `EmailAddress`, `Compare`) nas entidades e ViewModels.
 - `ModelState.IsValid` valida os dados no servidor antes de qualquer gravação.
 - **ViewModels limitam os campos recebidos** — `UsuarioId`, `SenhaHash` e `DataCadastro` nunca são editáveis via formulário.

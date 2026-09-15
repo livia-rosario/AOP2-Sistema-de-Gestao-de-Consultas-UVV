@@ -11,8 +11,7 @@ public class ConsultaViewModel
     [Display(Name = "Data e horário")]
     public DateTime? DataHora { get; set; }
 
-    [Required(ErrorMessage = "Informe uma descrição.")]
     [StringLength(1000, ErrorMessage = "Use no máximo 1.000 caracteres.")]
-    [Display(Name = "Descrição")]
-    public string Descricao { get; set; } = "";
+    [Display(Name = "Descrição (opcional)")]
+    public string? Descricao { get; set; }
 }
